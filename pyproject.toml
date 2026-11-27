@@ -1,0 +1,94 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "textra"
+version = "0.1.0"
+description = "Host-native image-to-text desktop app and library with pluggable OCR engines"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Textra contributors" }]
+keywords = ["ocr", "image-to-text", "desktop", "pyside6", "rapidocr", "tesseract"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: X11 Applications :: Qt",
+    "Environment :: Win32 (MS Windows)",
+    "Environment :: MacOS X",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Multimedia :: Graphics :: Capture :: Scanners",
+    "Topic :: Text Processing",
+    "Typing :: Typed",
+]
+
+dependencies = [
+    # Essentials only: Textra uses QtCore, QtGui and QtWidgets. The full PySide6
+    # wheel set also ships WebEngine, which this application never loads.
+    "PySide6-Essentials>=6.6",
+    "pillow>=10.2",
+    "numpy>=1.26",
+    "pydantic>=2.6",
+    "pydantic-settings>=2.2",
+    # Default OCR engine: ONNX Runtime, CPU-only, no system binary required.
+    # Both imports are lazy, so a Tesseract-only install never loads them.
+    "rapidocr>=3.0",
+    "onnxruntime>=1.17",
+]
+
+[project.optional-dependencies]
+tesseract = ["pytesseract>=0.3.10"]
+dev = [
+    "pytest>=8.0",
+    "pytest-qt>=4.4",
+    "ruff>=0.4",
+    "mypy>=1.9",
+]
+
+[project.scripts]
+textra = "textra.cli:main"
+
+[project.gui-scripts]
+textra-gui = "textra.ui.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+textra = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+    "live: runs a real OCR engine; may download models and take a minute",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+ignore = ["E501", "RUF001", "RUF002", "RUF003"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["textra"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_ignores = true
+show_error_codes = true
+files = ["src/textra"]
+
+[[tool.mypy.overrides]]
+module = ["rapidocr.*", "onnxruntime.*", "pytesseract.*"]
+ignore_missing_imports = true
