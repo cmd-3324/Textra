@@ -33,11 +33,19 @@ from ..domain.models import BlockKind, BoundingBox, RawLine, TextBlock, TextLine
 #: Vertical tolerance for "these lines sit on the same row", in line heights.
 ROW_TOLERANCE = 0.55
 #: Vertical gap still counted as the same paragraph, in line heights.
-#: Tight enough that a blank line between two sections separates them, loose
-#: enough that ordinary 1.2-1.5x line spacing stays one paragraph.
-PARAGRAPH_GAP = 0.6
+#: Wrapped prose leaves roughly a third of a line height between rows; a list of
+#: log or form rows leaves about half. The cut sits between the two, so a screen
+#: of separate records keeps its lines instead of becoming one run-on sentence.
+PARAGRAPH_GAP = 0.45
 #: Minimum horizontal overlap for two rows to belong to one block.
 PARAGRAPH_OVERLAP = 0.25
+#: A wrapped line reaches close to the widest line of its block: how far short it
+#: may end, in line heights. A row that stops well before the right edge is a
+#: separate record (a log line, a form field), not a continuation.
+WRAP_SHORTFALL = 2.5
+#: A gap this tight (in line heights) proves a wrap on its own, whatever the
+#: line lengths look like.
+TIGHT_GAP = 0.3
 #: A single row at least this much taller than the median is a heading.
 HEADING_SCALE = 1.2
 #: A heading is short: long wrapped text with one big word is not a title.
@@ -135,14 +143,22 @@ def _group_paragraphs(
     previous_was_heading = _is_heading_row(rows[0], median_height)
 
     for row in rows[1:]:
-        previous_box = _row_box(groups[-1][-1])
+        group = groups[-1]
+        previous_box = _row_box(group[-1])
         row_box = _row_box(row)
         gap = row_box.y0 - previous_box.y1
         overlap = row_box.horizontal_overlap(previous_box)
+
+        widest = max(_row_box(existing).x1 for existing in group)
+        widest = max(widest, row_box.x1)
+        wrapped = previous_box.x1 >= widest - WRAP_SHORTFALL * median_height
+        tight = gap <= TIGHT_GAP * median_height
+
         same_paragraph = (
             not previous_was_heading
             and gap <= PARAGRAPH_GAP * median_height
             and overlap >= PARAGRAPH_OVERLAP
+            and (wrapped or tight)
         )
         if same_paragraph:
             groups[-1].append(row)
