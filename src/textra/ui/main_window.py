@@ -21,6 +21,7 @@ from PySide6.QtGui import (
     QDropEvent,
     QGuiApplication,
     QImage,
+    QImageWriter,
     QKeySequence,
     QShortcut,
     QStandardItemModel,
@@ -287,7 +288,10 @@ class MainWindow(QMainWindow):
     def _encode_png(image: QImage) -> bytes:
         buffer = QBuffer()
         buffer.open(QIODevice.OpenModeFlag.WriteOnly)
-        image.save(buffer, b"PNG")
+        # QImage.save only accepts a str format at runtime, although its own stub
+        # advertises bytes for the QIODevice overload; QImageWriter takes the
+        # format as the bytes the type checker expects.
+        QImageWriter(buffer, b"PNG").write(image)
         # QByteArray -> buffer protocol -> bytes; the second .data() is what
         # PySide6 exposes for the raw payload.
         return bytes(buffer.data().data())
