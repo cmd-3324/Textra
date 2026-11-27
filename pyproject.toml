@@ -39,6 +39,7 @@ dependencies = [
     # Both imports are lazy, so a Tesseract-only install never loads them.
     "rapidocr>=3.0",
     "onnxruntime>=1.17",
+    "pyinstaller>=6.22.3",
 ]
 
 [project.optional-dependencies]

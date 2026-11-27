@@ -47,5 +47,3 @@ models/
 .DS_Store
 Thumbs.db
 desktop.ini
-.env.example
-test/
