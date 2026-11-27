@@ -68,23 +68,43 @@ def _stylesheet(theme: Theme) -> str:
         color: {theme.text};
     }}
     QLabel {{ color: {theme.text}; background: transparent; }}
-    QLabel#AppTitle {{ font-size: 19px; font-weight: 600; letter-spacing: 0.2px; }}
+    QLabel#AppTitle {{ font-size: 21px; font-weight: 600; letter-spacing: 0.3px; }}
     QLabel#Tagline {{ color: {theme.muted}; font-size: 12px; }}
-    QLabel#SectionTitle {{ font-weight: 600; font-size: 13px; }}
+    QLabel#SectionTitle {{ font-weight: 600; font-size: 13px; letter-spacing: 0.2px; }}
     QLabel#Meta {{ color: {theme.muted}; font-size: 12px; }}
+    QLabel#Hint {{
+        color: {theme.muted};
+        font-size: 11px;
+        padding-left: 2px;
+    }}
+    QLabel#EmptyTitle {{
+        color: {theme.text};
+        font-size: 15px;
+        font-weight: 600;
+    }}
+    QLabel#EmptyBody {{
+        color: {theme.muted};
+        font-size: 12px;
+        line-height: 150%;
+    }}
     QFrame#Card {{
         background: {theme.surface};
         border: 1px solid {theme.border};
-        border-radius: 10px;
+        border-radius: 12px;
+    }}
+    QFrame#Card[dragActive="true"] {{
+        border: 2px solid {theme.accent};
     }}
     QPushButton {{
         background: {theme.surface};
         color: {theme.text};
         border: 1px solid {theme.border};
-        border-radius: 7px;
-        padding: 7px 13px;
+        border-radius: 8px;
+        padding: 7px 14px;
+        min-height: 18px;
     }}
     QPushButton:hover {{ border-color: {theme.accent}; }}
+    QPushButton:focus {{ border-color: {theme.accent}; outline: none; }}
     QPushButton:pressed {{ background: {theme.surface_alt}; }}
     QPushButton:disabled {{ color: {theme.disabled}; border-color: {theme.border}; }}
     QPushButton#Primary {{
@@ -100,11 +120,12 @@ def _stylesheet(theme: Theme) -> str:
         background: {theme.surface_alt};
         color: {theme.text};
         border: 1px solid {theme.border};
-        border-radius: 7px;
-        padding: 5px 9px;
-        min-width: 128px;
+        border-radius: 8px;
+        padding: 6px 10px;
+        min-height: 18px;
+        min-width: 132px;
     }}
-    QComboBox:hover {{ border-color: {theme.accent}; }}
+    QComboBox:hover, QComboBox:focus {{ border-color: {theme.accent}; }}
     QComboBox QAbstractItemView {{
         background: {theme.surface};
         color: {theme.text};
@@ -118,8 +139,8 @@ def _stylesheet(theme: Theme) -> str:
         background: {theme.surface_alt};
         color: {theme.text};
         border: 1px solid {theme.border};
-        border-radius: 8px;
-        padding: 10px;
+        border-radius: 10px;
+        padding: 12px;
         selection-background-color: {theme.selection};
         selection-color: {theme.text};
         font-family: "Cascadia Mono", "Consolas", "Menlo", "DejaVu Sans Mono", monospace;
@@ -152,7 +173,31 @@ def _stylesheet(theme: Theme) -> str:
         min-width: 120px;
     }}
     QProgressBar::chunk {{ background: {theme.accent}; border-radius: 3px; }}
-    QSplitter::handle {{ background: transparent; width: 12px; }}
+    QSplitter::handle {{ background: transparent; width: 14px; }}
+    QScrollBar:vertical {{
+        background: transparent;
+        width: 10px;
+        margin: 2px;
+    }}
+    QScrollBar::handle:vertical {{
+        background: {theme.border};
+        border-radius: 4px;
+        min-height: 28px;
+    }}
+    QScrollBar::handle:vertical:hover {{ background: {theme.muted}; }}
+    QScrollBar:horizontal {{
+        background: transparent;
+        height: 10px;
+        margin: 2px;
+    }}
+    QScrollBar::handle:horizontal {{
+        background: {theme.border};
+        border-radius: 4px;
+        min-width: 28px;
+    }}
+    QScrollBar::handle:horizontal:hover {{ background: {theme.muted}; }}
+    QScrollBar::add-line, QScrollBar::sub-line {{ width: 0; height: 0; }}
+    QScrollBar::add-page, QScrollBar::sub-page {{ background: transparent; }}
     QToolTip {{
         background: {theme.surface};
         color: {theme.text};

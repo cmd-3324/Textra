@@ -20,16 +20,25 @@ class OutputFormat(StrEnum):
     PLAIN = "plain"
     MARKDOWN = "markdown"
     JSON = "json"
+    YAML = "yaml"
 
     @property
     def suffix(self) -> str:
-        return {"plain": ".txt", "markdown": ".md", "json": ".json"}[self.value]
+        return {
+            "plain": ".txt",
+            "markdown": ".md",
+            "json": ".json",
+            "yaml": ".yaml",
+        }[self.value]
 
     @property
     def label(self) -> str:
-        return {"plain": "Plain text", "markdown": "Markdown", "json": "Structured JSON"}[
-            self.value
-        ]
+        return {
+            "plain": "Plain text",
+            "markdown": "Markdown",
+            "json": "Structured JSON",
+            "yaml": "Structured YAML",
+        }[self.value]
 
 
 class BlockKind(StrEnum):
@@ -132,7 +141,7 @@ class PreprocessOptions:
     auto_orient: bool = True
     autocontrast: bool = True
     deskew: bool = True
-    max_dimension: int = 2400
+    max_dimension: int = 3600
     min_dimension: int = 0
 
 

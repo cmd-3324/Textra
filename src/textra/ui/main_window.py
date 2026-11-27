@@ -78,6 +78,7 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle(f"{WINDOW_TITLE} {__version__}")
         self.resize(settings.ui_window_width, settings.ui_window_height)
+        self.setMinimumSize(880, 560)
         self.setAcceptDrops(True)
 
         self._build_ui()
@@ -105,6 +106,11 @@ class MainWindow(QMainWindow):
         header.addWidget(tagline)
 
         toolbar = self._build_toolbar(root)
+        hint = QLabel(
+            "Ctrl+O open   ·   Ctrl+V paste   ·   Ctrl+Enter extract   ·   Ctrl+S save",
+            root,
+        )
+        hint.setObjectName("Hint")
 
         self.preview = ImagePreview(root)
         self.result = ResultPanel(root)
@@ -121,6 +127,7 @@ class MainWindow(QMainWindow):
         layout.setSpacing(12)
         layout.addLayout(header)
         layout.addWidget(toolbar)
+        layout.addWidget(hint)
         layout.addWidget(splitter, 1)
 
         self._status = QLabel("Ready", self)
@@ -140,7 +147,9 @@ class MainWindow(QMainWindow):
 
     def _build_toolbar(self, parent: QWidget) -> QFrame:
         self.open_button = QPushButton("Open image…", parent)
+        self.open_button.setToolTip("Open an image file  (Ctrl+O)")
         self.paste_button = QPushButton("Paste", parent)
+        self.paste_button.setToolTip("Use the image on the clipboard  (Ctrl+V)")
         self.engine_label = QLabel("Engine", parent)
         self.engine_label.setObjectName("Meta")
         self.engine_combo = QComboBox(parent)
@@ -158,7 +167,9 @@ class MainWindow(QMainWindow):
         self.extract_button = QPushButton("Extract text", parent)
         self.extract_button.setObjectName("Primary")
         self.extract_button.setDefault(True)
+        self.extract_button.setToolTip("Read the loaded image  (Ctrl+Enter)")
         self.cancel_button = QPushButton("Cancel", parent)
+        self.cancel_button.setToolTip("Stop the running extraction  (Esc)")
         self.cancel_button.setEnabled(False)
         self.cancel_button.hide()
 
@@ -388,7 +399,8 @@ class MainWindow(QMainWindow):
         if not content:
             return
         QGuiApplication.clipboard().setText(content)
-        self._status.setText("Copied to the clipboard.")
+        characters = len(content)
+        self._status.setText(f"Copied {characters:,} characters to the clipboard.")
 
     def _save_result(self) -> None:
         content = self.result.content()

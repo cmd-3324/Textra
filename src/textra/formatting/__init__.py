@@ -10,12 +10,14 @@ from ..domain.ports import ResultFormatter
 from .json_formatter import SCHEMA_VERSION, JsonFormatter, result_to_dict
 from .markdown import MarkdownFormatter
 from .plain_text import PlainTextFormatter
+from .yaml_formatter import YamlFormatter
 
 DEFAULT_FORMATTERS: Mapping[OutputFormat, ResultFormatter] = MappingProxyType(
     {
         OutputFormat.PLAIN: PlainTextFormatter(),
         OutputFormat.MARKDOWN: MarkdownFormatter(),
         OutputFormat.JSON: JsonFormatter(),
+        OutputFormat.YAML: YamlFormatter(),
     }
 )
 
@@ -44,6 +46,7 @@ __all__ = [
     "JsonFormatter",
     "MarkdownFormatter",
     "PlainTextFormatter",
+    "YamlFormatter",
     "format_result",
     "result_to_dict",
 ]

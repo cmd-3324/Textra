@@ -20,7 +20,10 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QFrame, QLabel, QSizePolicy, QVBoxLayout, QWidget
 
-EMPTY_TEXT = "Drop an image here\nor press Ctrl+V to paste"
+EMPTY_TITLE = "Drop an image here"
+EMPTY_HINT = "or press Ctrl+V to paste a screenshot, or Ctrl+O to open a file"
+EMPTY_TEXT = f"{EMPTY_TITLE}\n{EMPTY_HINT}"
+SUPPORTED_FORMATS = "PNG · JPEG · WEBP · BMP · TIFF"
 SUPPORTED_SUFFIXES = frozenset({".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tif", ".tiff"})
 
 
@@ -38,12 +41,13 @@ class ImagePreview(QFrame):
 
         self._pixmap: QPixmap | None = None
 
-        self._canvas = QLabel(EMPTY_TEXT, self)
+        self._canvas = QLabel(self)
         self._canvas.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._canvas.setWordWrap(True)
-        self._canvas.setObjectName("Meta")
+        self._canvas.setTextFormat(Qt.TextFormat.RichText)
+        self._show_empty_state()
 
-        self._caption = QLabel("No image loaded", self)
+        self._caption = QLabel(SUPPORTED_FORMATS, self)
         self._caption.setObjectName("Meta")
         self._caption.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -54,6 +58,12 @@ class ImagePreview(QFrame):
         layout.addWidget(self._caption, 0)
 
     # -- content ---------------------------------------------------------- #
+    def _show_empty_state(self) -> None:
+        self._canvas.setText(
+            f'<p style="font-size:15px;font-weight:600;margin:0">{EMPTY_TITLE}</p>'
+            f'<p style="font-size:12px;margin:8px 0 0 0">{EMPTY_HINT}</p>'
+        )
+
     def show_image(self, image: QImage, name: str) -> None:
         """Replace the placeholder with ``image``, sized to the pane."""
         self._pixmap = QPixmap.fromImage(image)
@@ -117,4 +127,11 @@ class ImagePreview(QFrame):
         return None
 
 
-__all__ = ["EMPTY_TEXT", "SUPPORTED_SUFFIXES", "ImagePreview"]
+__all__ = [
+    "EMPTY_HINT",
+    "EMPTY_TEXT",
+    "EMPTY_TITLE",
+    "SUPPORTED_FORMATS",
+    "SUPPORTED_SUFFIXES",
+    "ImagePreview",
+]

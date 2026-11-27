@@ -1,7 +1,7 @@
 # Textra
 
 A desktop application that turns a screenshot, a phone photo or a scan into text
-you can use — plain text, Markdown or structured JSON with coordinates and
+you can use — plain text, Markdown, structured JSON or YAML with coordinates and
 confidence scores. It runs entirely on your machine: no account, no upload, no
 network call after the OCR models are cached.
 
@@ -15,9 +15,12 @@ The same core drives a CLI, so a script can do exactly what the window does.
 - **Structure, not just a string** — lines are grouped into paragraphs, headings
   and list items using their geometry, wrapped lines are rejoined and
   hyphenation is undone. The JSON output keeps every line's box and confidence.
-- **Three formats** — plain text for pasting, Markdown for notes and issues,
-  structured JSON for pipelines. Switching format re-renders the last result
-  without running OCR again.
+- **Four formats** — plain text for pasting, Markdown for notes and issues,
+  structured JSON for pipelines, YAML for structure a person edits by hand.
+  Switching format re-renders the last result without running OCR again.
+- **Windowed recognition** — a large screenshot is read in overlapping 1400x900
+  windows instead of being shrunk to fit the detector. Whole-page inference
+  misses 12-13 px UI text entirely (it returns nothing); windows recover it.
 - **Pluggable engines** — RapidOCR (default, pip-only, CPU) and Tesseract, with a
   registry that lets a third-party backend plug in through an entry point. The
   UI and pipeline never import an engine library.
@@ -91,6 +94,7 @@ checking an engine installation.
 textra extract invoice.png                       # plain text on stdout
 textra extract invoice.png -f markdown           # Markdown
 textra extract invoice.png -f json -o out.json   # structured JSON to a file
+textra extract invoice.png -f yaml -o out.yaml   # the same schema as YAML
 textra extract photo.jpg -e tesseract --no-preprocess
 textra engines                                   # what can run here, and why not
 textra doctor                                    # configuration and engine check
@@ -218,7 +222,7 @@ Textra/
 │   │   ├── chain.py         ordering and truthful "applied" reporting
 │   │   └── pillow_preprocessor.py   the ImagePreprocessor adapter
 │   ├── pipeline/layout.py   rows, paragraphs, headings, reading order
-│   ├── formatting/          plain text, Markdown, JSON schema
+│   ├── formatting/          plain text, Markdown, JSON schema, YAML
 │   ├── services/
 │   │   ├── extraction_service.py   orchestration, deadlines, telemetry
 │   │   └── cancellation.py         cooperative token

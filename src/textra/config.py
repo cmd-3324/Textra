@@ -48,7 +48,7 @@ class Settings(BaseSettings):
 
     # -- OCR ------------------------------------------------------------ #
     ocr_language: str = "en"
-    extraction_timeout_seconds: float = Field(default=60.0, gt=0, le=600)
+    extraction_timeout_seconds: float = Field(default=120.0, gt=0, le=600)
     min_confidence: float = Field(default=0.0, ge=0, le=1)
     tesseract_cmd: str | None = None
     model_dir: str | None = None
@@ -65,7 +65,7 @@ class Settings(BaseSettings):
     preprocess_auto_orient: bool = True
     preprocess_autocontrast: bool = True
     preprocess_deskew: bool = True
-    preprocess_max_dimension: int = Field(default=2400, ge=0)
+    preprocess_max_dimension: int = Field(default=3600, ge=0)
     preprocess_min_dimension: int = Field(default=0, ge=0)
 
     # -- observability --------------------------------------------------- #

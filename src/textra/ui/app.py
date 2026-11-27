@@ -11,8 +11,8 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from pydantic import ValidationError
-from PySide6.QtCore import QTimer
-from PySide6.QtGui import QIcon
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtGui import QGuiApplication, QIcon
 from PySide6.QtWidgets import QApplication, QMessageBox
 
 from .. import APP_NAME, __version__
@@ -32,6 +32,11 @@ def create_application(argv: Sequence[str] | None = None) -> QApplication:
     if isinstance(existing, QApplication):
         return existing
 
+    # Fractional scaling on a 125 %/150 % Windows display must render text at
+    # the real ratio; rounding to whole factors blurs small OCR text badly.
+    QGuiApplication.setHighDpiScaleFactorRoundingPolicy(
+        Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
+    )
     app = QApplication(list(argv) if argv is not None else [sys.argv[0]])
     app.setApplicationName(APP_NAME)
     app.setApplicationDisplayName(APP_NAME)
