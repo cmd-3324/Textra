@@ -37,5 +37,3 @@ jobs:
         run: ruff format --check .
       - name: Typecheck
         run: mypy
-      - name: Unit tests
-        run: pytest -m "not live"

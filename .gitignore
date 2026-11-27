@@ -36,9 +36,10 @@ out/
 tmp/
 models/
 
-# On-disk only: Windows helper scripts, test suite and installer tooling are
+# On-disk only: build scripts, the test suite and installer tooling are
 # kept locally but published nowhere.
 *.bat
+*.spec
 tests/
 installer/
 
