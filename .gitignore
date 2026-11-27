@@ -49,5 +49,3 @@ installer/
 .DS_Store
 Thumbs.db
 desktop.ini
-src/textra/assets/textra.png
-rc/textra/assets/textra.ico
