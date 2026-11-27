@@ -12,6 +12,7 @@ wheelhouse/
 
 # Virtual environments
 .venv/
+.venv*/
 venv/
 env/
 ENV/
@@ -35,10 +36,11 @@ out/
 tmp/
 models/
 
-# Local Windows helper scripts (the project's own build scripts stay tracked)
+# On-disk only: Windows helper scripts, test suite and installer tooling are
+# kept locally but published nowhere.
 *.bat
-!build.bat
-!installer/build_installer.bat
+tests/
+installer/
 
 # Editors and OS files
 .vscode/
@@ -47,3 +49,5 @@ models/
 .DS_Store
 Thumbs.db
 desktop.ini
+src/textra/assets/textra.png
+rc/textra/assets/textra.ico

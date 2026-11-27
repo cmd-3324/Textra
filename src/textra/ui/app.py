@@ -12,6 +12,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 from PySide6.QtCore import QTimer
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QMessageBox
 
 from .. import APP_NAME, __version__
@@ -36,7 +37,14 @@ def create_application(argv: Sequence[str] | None = None) -> QApplication:
     app.setApplicationDisplayName(APP_NAME)
     app.setOrganizationName(APP_NAME)
     app.setApplicationVersion(__version__)
+    app.setWindowIcon(_app_icon())
     return app
+
+
+def _app_icon() -> QIcon:
+    """Return the packaged window icon, or an empty icon if it is missing."""
+    path = Path(__file__).resolve().parents[1] / "assets" / "textra.ico"
+    return QIcon(str(path)) if path.is_file() else QIcon()
 
 
 def run(initial_image: Path | None = None, argv: Sequence[str] | None = None) -> int:

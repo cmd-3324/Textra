@@ -61,7 +61,7 @@ textra-gui = "textra.ui.app:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-textra = ["py.typed"]
+textra = ["py.typed", "assets/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
